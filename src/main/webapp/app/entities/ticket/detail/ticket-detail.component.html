@@ -1,0 +1,108 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (ticket(); as ticketRef) {
+      <div>
+        <h2 data-cy="ticketDetailsHeading"><span>Ticket</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ ticketRef.id }}</span>
+          </dd>
+          <dt><span>Title</span></dt>
+          <dd>
+            <span>{{ ticketRef.title }}</span>
+          </dd>
+          <dt><span>Description</span></dt>
+          <dd>
+            <span>{{ ticketRef.description }}</span>
+          </dd>
+          <dt><span>Due Date</span></dt>
+          <dd>
+            <span>{{ ticketRef.dueDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span>Date</span></dt>
+          <dd>
+            <span>{{ ticketRef.date | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span>Status</span></dt>
+          <dd>
+            <span>{{
+              {
+                null: '',
+                OPEN: 'Open',
+                WAITING_FOR_RESPONSE: 'Waiting for Customer Response',
+                CLOSED: 'Closed',
+                DUPLICATE: 'Duplicate',
+                IN_PROGRESS: 'In Progress',
+                REOPENED: 'Reopened',
+                CANNOT_REPRODUCE: 'Cannot Reproduce',
+                SOLVED: 'Solved',
+                WONT_IMPLEMENT: 'Won&#39;t Implement',
+                VERIFIED: 'Verified',
+              }[ticketRef.status ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span>Type</span></dt>
+          <dd>
+            <span>{{ { null: '', BUG: 'Bug', FEATURE: 'Feature' }[ticketRef.type ?? 'null'] }}</span>
+          </dd>
+          <dt><span>Priority</span></dt>
+          <dd>
+            <span>{{
+              {
+                null: '',
+                HIGHEST: 'Highest',
+                HIGHER: 'Higher',
+                HIGH: 'High',
+                NORMAL: 'Normal',
+                LOW: 'Low',
+                LOWER: 'Lower',
+                LOWERST: 'Lowest',
+              }[ticketRef.priority ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span>Project</span></dt>
+          <dd>
+            @if (ticket()!.project) {
+              <div>
+                <a [routerLink]="['/project', ticket()!.project?.id, 'view']">{{ ticketRef.project?.name }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Assigned To</span></dt>
+          <dd>
+            <span>{{ ticketRef.assignedTo?.login }}</span>
+          </dd>
+          <dt><span>Reported By</span></dt>
+          <dd>
+            <span>{{ ticketRef.reportedBy?.login }}</span>
+          </dd>
+          <dt><span>Label</span></dt>
+          <dd>
+            @for (label of ticketRef.labels; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/label', label.id, 'view']">{{ label?.label }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/ticket', ticketRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

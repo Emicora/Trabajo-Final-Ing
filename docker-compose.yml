@@ -1,0 +1,126 @@
+services:
+  postgresql:
+    image: postgres:17.4
+    container_name: bugtracker-postgresql
+    environment:
+      - POSTGRES_USER=bugtracker
+      - POSTGRES_PASSWORD=bugtracker
+      - POSTGRES_DB=bugtracker
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      # Usando disco externo para liberar espacio en disco principal
+      - /media/emicoratolo/linux/docker-data/postgresql:/var/lib/postgresql/data
+      # Alternativa: usar volumen nombrado (comentado)
+      # - postgresql_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U bugtracker']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - bugtracker-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bugtracker-app
+    image: bugtracker:latest
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=dev,api-docs
+      - MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/bugtracker
+      - SPRING_DATASOURCE_USERNAME=bugtracker
+      - SPRING_DATASOURCE_PASSWORD=bugtracker
+      - SPRING_LIQUIBASE_URL=jdbc:postgresql://postgresql:5432/bugtracker
+      - SPRING_LIQUIBASE_USER=bugtracker
+      - SPRING_LIQUIBASE_PASSWORD=bugtracker
+      - LOGGING_LEVEL_ROOT=INFO
+      - LOGGING_LEVEL_COM_BUGTRACKER=DEBUG
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - bugtracker-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/management/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ELK Stack for logging
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: bugtracker-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      # Usando disco externo para liberar espacio en disco principal
+      - /media/emicoratolo/linux/docker-data/elasticsearch:/usr/share/elasticsearch/data
+      # Alternativa: usar volumen nombrado (comentado)
+      # - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - bugtracker-network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.0
+    container_name: bugtracker-logstash
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - bugtracker-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: bugtracker-kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - SERVER_NAME=kibana
+      - SERVER_HOST=0.0.0.0
+    ports:
+      - "5601:5601"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - bugtracker-network
+
+# Volúmenes: Ahora usando bind mounts al disco externo
+# Los datos se guardan en /media/emicoratolo/linux/docker-data/
+
+networks:
+  bugtracker-network:
+    driver: bridge
+
+
+

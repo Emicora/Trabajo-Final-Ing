@@ -1,0 +1,11 @@
+id;title;description;due_date;date;status;type;priority
+1;undergo gosh;glisten hierarchy;2025-12-01;2025-12-02T11:16:45;CANNOT_REPRODUCE;BUG;LOWERST
+2;determined;gadzooks;2025-12-02;2025-12-01T21:29:18;CANNOT_REPRODUCE;FEATURE;LOWER
+3;positively bah;seldom peppery coarse;2025-12-02;2025-12-02T05:55:12;WAITING_FOR_RESPONSE;FEATURE;HIGH
+4;thigh molasses serenade;to chainstay converse;2025-12-01;2025-12-02T11:13:39;CLOSED;BUG;LOWERST
+5;um;ugh;2025-12-02;2025-12-02T07:46:49;WONT_IMPLEMENT;BUG;LOWERST
+6;even;likely instead serve;2025-12-01;2025-12-02T01:25:13;CANNOT_REPRODUCE;BUG;HIGHER
+7;sting fork;astride afore;2025-12-02;2025-12-01T23:20:01;CLOSED;FEATURE;LOWERST
+8;inside;ha ugh jealously;2025-12-01;2025-12-02T11:14:42;DUPLICATE;BUG;HIGHEST
+9;gadzooks puritan;save because fooey;2025-12-01;2025-12-01T17:15:08;WAITING_FOR_RESPONSE;FEATURE;LOWER
+10;humble nor;verbally psst buck;2025-12-02;2025-12-01T16:27:55;VERIFIED;BUG;HIGHEST

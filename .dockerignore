@@ -1,0 +1,17 @@
+.git
+.gitignore
+node_modules
+npm-debug.log
+README.md
+README-PROYECTO.md
+.vscode
+.idea
+*.iml
+target
+.angular
+dist
+ionic-app/node_modules
+jdl-samples
+
+
+

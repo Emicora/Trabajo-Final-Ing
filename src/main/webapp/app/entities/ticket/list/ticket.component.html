@@ -1,0 +1,211 @@
+<div>
+  <h2 id="page-heading" data-cy="TicketHeading">
+    <span>Tickets</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-ticket"
+        [routerLink]="['/ticket/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span>Create a new Ticket</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (tickets().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>No Tickets found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="title">
+              <div class="d-flex">
+                <span>Title</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="description">
+              <div class="d-flex">
+                <span>Description</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="dueDate">
+              <div class="d-flex">
+                <span>Due Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="date">
+              <div class="d-flex">
+                <span>Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="status">
+              <div class="d-flex">
+                <span>Status</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="type">
+              <div class="d-flex">
+                <span>Type</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="priority">
+              <div class="d-flex">
+                <span>Priority</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="project.name">
+              <div class="d-flex">
+                <span>Project</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="assignedTo.login">
+              <div class="d-flex">
+                <span>Assigned To</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="reportedBy.login">
+              <div class="d-flex">
+                <span>Reported By</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ticket of tickets(); track trackId(ticket)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/ticket', ticket.id, 'view']">{{ ticket.id }}</a>
+              </td>
+              <td>{{ ticket.title }}</td>
+              <td>{{ ticket.description }}</td>
+              <td>{{ ticket.dueDate | formatMediumDate }}</td>
+              <td>{{ ticket.date | formatMediumDatetime }}</td>
+              <td>
+                {{
+                  {
+                    null: '',
+                    OPEN: 'Open',
+                    WAITING_FOR_RESPONSE: 'Waiting for Customer Response',
+                    CLOSED: 'Closed',
+                    DUPLICATE: 'Duplicate',
+                    IN_PROGRESS: 'In Progress',
+                    REOPENED: 'Reopened',
+                    CANNOT_REPRODUCE: 'Cannot Reproduce',
+                    SOLVED: 'Solved',
+                    WONT_IMPLEMENT: 'Won&#39;t Implement',
+                    VERIFIED: 'Verified',
+                  }[ticket.status ?? 'null']
+                }}
+              </td>
+              <td>{{ { null: '', BUG: 'Bug', FEATURE: 'Feature' }[ticket.type ?? 'null'] }}</td>
+              <td>
+                {{
+                  {
+                    null: '',
+                    HIGHEST: 'Highest',
+                    HIGHER: 'Higher',
+                    HIGH: 'High',
+                    NORMAL: 'Normal',
+                    LOW: 'Low',
+                    LOWER: 'Lower',
+                    LOWERST: 'Lowest',
+                  }[ticket.priority ?? 'null']
+                }}
+              </td>
+              <td>
+                @if (ticket.project) {
+                  <div>
+                    <a [routerLink]="['/project', ticket.project.id, 'view']">{{ ticket.project.name }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                {{ ticket.assignedTo?.login }}
+              </td>
+              <td>
+                {{ ticket.reportedBy?.login }}
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/ticket', ticket.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
+
+                  <a [routerLink]="['/ticket', ticket.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt"></fa-icon>
+                    <span class="d-none d-md-inline">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(ticket)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times"></fa-icon>
+                    <span class="d-none d-md-inline">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (tickets().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page, totalItems, itemsPerPage }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems"
+          [page]="page"
+          [pageSize]="itemsPerPage"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        ></ngb-pagination>
+      </div>
+    </div>
+  }
+</div>

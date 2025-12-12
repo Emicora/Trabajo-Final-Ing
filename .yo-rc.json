@@ -1,0 +1,18 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "bugtracker",
+    "buildTool": "maven",
+    "clientFramework": "angular",
+    "enableTranslation": false,
+    "entities": ["Project", "Label", "Ticket", "Attachment", "Comment"],
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "Y2RhNTdjYzU0NmE2YTAwNTFiMWI0YzY2OGM2NzMzNWJlMDZiNDE3MTg2NWFjZDM3MjA0NGZhMTA0NmIyMDQyZTZiMGVmYzVkOWIzNmU1NTM3ZGE5NzIwMDc2MTgwOTY0NjhkODVjODNiMTJjNDU4MjA0N2U1NzJiMmNiY2E0NTE=",
+    "lastLiquibaseTimestamp": 1764684667000,
+    "nativeLanguage": "en",
+    "packageName": "com.bugtracker",
+    "prodDatabaseType": "postgresql",
+    "testFrameworks": ["cypress"]
+  }
+}
