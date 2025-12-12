@@ -118,9 +118,38 @@ services:
 # Volúmenes: Ahora usando bind mounts al disco externo
 # Los datos se guardan en /media/emicoratolo/linux/docker-data/
 
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: bugtracker-jenkins
+    ports:
+      - "8082:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      # Socket de Docker (opcional, solo si necesitas usar comandos docker directamente)
+      # Con Jib no es necesario, pero lo dejamos por si acaso
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JENKINS_OPTS=--httpPort=8080
+    networks:
+      - bugtracker-network
+    restart: unless-stopped
+    depends_on:
+      - postgresql
+      - elasticsearch
+
 networks:
   bugtracker-network:
     driver: bridge
+
+volumes:
+  jenkins_home:
+    # Opcional: usar disco externo para Jenkins
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /media/emicoratolo/linux/docker-data/jenkins
 
 
 
