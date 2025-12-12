@@ -157,3 +157,14 @@ coverage/
 ######################
 *.md
 *.pdf
+
+######################
+# Sample files
+######################
+jdl-samples/
+
+######################
+# Angular cache
+######################
+.angular/
+ionic-app/.angular/
