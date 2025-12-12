@@ -2,8 +2,7 @@ pipeline {
     agent any
     
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        DOCKER_IMAGE = 'bugtracker'
+        DOCKER_IMAGE = 'emicora/bugtracker'  
         DOCKER_TAG = "${env.BUILD_NUMBER}"
     }
     
@@ -16,13 +15,14 @@ pipeline {
         
         stage('Build') {
             steps {
-                sh './mvnw clean package -DskipTests'
+                sh 'chmod +x mvnw'
+                sh './mvnw clean package -DskipTests -Dskip.npm -Dskip.installnodenpm -B'
             }
         }
         
         stage('Test') {
             steps {
-                sh './mvnw test'
+                sh './mvnw test -Dskip.npm -Dskip.installnodenpm'
             }
             post {
                 always {
@@ -31,46 +31,37 @@ pipeline {
             }
         }
         
-        stage('Build Docker Image') {
+        stage('Package') {
             steps {
-                script {
-                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                    docker.build("${DOCKER_IMAGE}:latest")
-                }
+                sh './mvnw -ntp -Pprod clean package -DskipTests -Dskip.npm -Dskip.installnodenpm'
             }
         }
         
-        stage('Push to Docker Hub') {
+        stage('Publish Docker Image') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
-                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
-                        docker.image("${DOCKER_IMAGE}:latest").push()
-                    }
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
+                    sh "./mvnw -ntp jib:build -Djib.to.image=${DOCKER_IMAGE}:${DOCKER_TAG} -Djib.to.tags=latest,${DOCKER_TAG}"
                 }
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
-                echo 'Deployment stage - Configure your deployment here'
-                // Ejemplo: docker-compose up -d
             }
         }
     }
     
     post {
-        always {
-            cleanWs()
-        }
         success {
-            echo 'Pipeline completed successfully!'
+            echo "✅ Pipeline completed successfully! Image: ${DOCKER_IMAGE}:${DOCKER_TAG}"
         }
         failure {
-            echo 'Pipeline failed!'
+            echo "❌ Pipeline failed!"
+        }
+        always {
+            // Limpiar workspace con manejo de errores
+            script {
+                try {
+                    cleanWs()
+                } catch (Exception e) {
+                    echo "⚠️  No se pudo limpiar el workspace: ${e.message}"
+                }
+            }
         }
     }
 }
-
-
-
