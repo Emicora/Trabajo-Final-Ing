@@ -17,7 +17,7 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     console.log('HomePage initialized');
-    this.authenticateAndLoadData();
+    // No cargar automáticamente, esperar al botón
   }
 
   authenticateAndLoadData() {
@@ -102,6 +102,13 @@ export class HomePage implements OnInit {
         }
       }
     });
+  }
+
+  loadDataOnClick() {
+    if (this.loading) {
+      return; // Evitar múltiples llamadas simultáneas
+    }
+    this.authenticateAndLoadData();
   }
 
   refresh(event: any) {

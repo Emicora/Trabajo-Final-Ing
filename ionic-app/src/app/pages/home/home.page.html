@@ -1,7 +1,10 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>
-      BugTracker
+      <span style="display: inline-flex; align-items: center; gap: 8px;">
+        <ion-icon name="bug-outline"></ion-icon>
+        BugTracker
+      </span>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -17,46 +20,104 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div id="container">
-    <ion-card>
+  <div class="main-container">
+    <!-- Botón de carga principal -->
+    <div class="load-button-container" *ngIf="tickets.length === 0 && projects.length === 0 && !loading">
+      <ion-button 
+        expand="block" 
+        size="large" 
+        color="primary" 
+        (click)="loadDataOnClick()"
+        class="load-button">
+        <ion-icon slot="start" name="refresh-outline"></ion-icon>
+        Cargar Datos
+      </ion-button>
+      <p class="help-text">Presiona el botón para cargar tickets y proyectos</p>
+    </div>
+
+    <!-- Spinner de carga -->
+    <div class="loading-container" *ngIf="loading">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Cargando datos...</p>
+    </div>
+
+    <!-- Botón de recarga (cuando ya hay datos) -->
+    <div class="reload-button-container" *ngIf="(tickets.length > 0 || projects.length > 0) && !loading">
+      <ion-button 
+        expand="block" 
+        fill="outline" 
+        color="primary" 
+        (click)="loadDataOnClick()"
+        class="reload-button">
+        <ion-icon slot="start" name="refresh-outline"></ion-icon>
+        Actualizar Datos
+      </ion-button>
+    </div>
+
+    <!-- Tarjeta de Tickets -->
+    <ion-card class="ticket-card" *ngIf="tickets.length > 0 || !loading">
       <ion-card-header>
-        <ion-card-title>Tickets</ion-card-title>
+        <ion-card-title>
+          <ion-icon name="list-outline" color="primary"></ion-icon>
+          Tickets
+          <ion-badge color="primary" *ngIf="tickets.length > 0">{{ tickets.length }}</ion-badge>
+        </ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-list>
-          <ion-item *ngFor="let ticket of tickets">
+        <ion-list lines="full">
+          <ion-item *ngFor="let ticket of tickets" class="ticket-item">
+            <ion-icon slot="start" [name]="ticket.type === 'BUG' ? 'bug-outline' : 'star-outline'" 
+                      [color]="ticket.type === 'BUG' ? 'danger' : 'warning'"></ion-icon>
             <ion-label>
-              <h2>{{ ticket.title }}</h2>
-              <p>{{ ticket.description }}</p>
-              <p>
-                <ion-badge [color]="getStatusColor(ticket.status)">
+              <h2 class="ticket-title">{{ ticket.title }}</h2>
+              <p class="ticket-description" *ngIf="ticket.description">
+                {{ ticket.description }}
+              </p>
+              <div class="badge-container">
+                <ion-badge [color]="getStatusColor(ticket.status)" class="status-badge">
                   {{ ticket.status }}
                 </ion-badge>
-                <ion-badge color="medium">{{ ticket.type }}</ion-badge>
-              </p>
+                <ion-badge [color]="ticket.type === 'BUG' ? 'danger' : 'warning'" class="type-badge">
+                  {{ ticket.type }}
+                </ion-badge>
+                <ion-badge color="tertiary" *ngIf="ticket.priority" class="priority-badge">
+                  {{ ticket.priority }}
+                </ion-badge>
+              </div>
             </ion-label>
           </ion-item>
-          <ion-item *ngIf="tickets.length === 0 && !loading">
-            <ion-label>No hay tickets disponibles</ion-label>
+          <ion-item *ngIf="tickets.length === 0 && !loading" class="empty-item">
+            <ion-label class="empty-label">
+              <ion-icon name="document-text-outline" color="medium"></ion-icon>
+              <p>No hay tickets disponibles</p>
+            </ion-label>
           </ion-item>
         </ion-list>
-        <ion-spinner *ngIf="loading"></ion-spinner>
       </ion-card-content>
     </ion-card>
 
-    <ion-card>
+    <!-- Tarjeta de Proyectos -->
+    <ion-card class="project-card" *ngIf="projects.length > 0 || !loading">
       <ion-card-header>
-        <ion-card-title>Proyectos</ion-card-title>
+        <ion-card-title>
+          <ion-icon name="folder-outline" color="success"></ion-icon>
+          Proyectos
+          <ion-badge color="success" *ngIf="projects.length > 0">{{ projects.length }}</ion-badge>
+        </ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-list>
-          <ion-item *ngFor="let project of projects">
+        <ion-list lines="full">
+          <ion-item *ngFor="let project of projects" class="project-item">
+            <ion-icon slot="start" name="folder" color="success"></ion-icon>
             <ion-label>
-              <h2>{{ project.name }}</h2>
+              <h2 class="project-name">{{ project.name }}</h2>
             </ion-label>
           </ion-item>
-          <ion-item *ngIf="projects.length === 0 && !loading">
-            <ion-label>No hay proyectos disponibles</ion-label>
+          <ion-item *ngIf="projects.length === 0 && !loading" class="empty-item">
+            <ion-label class="empty-label">
+              <ion-icon name="folder-open-outline" color="medium"></ion-icon>
+              <p>No hay proyectos disponibles</p>
+            </ion-label>
           </ion-item>
         </ion-list>
       </ion-card-content>

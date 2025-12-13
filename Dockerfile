@@ -11,12 +11,17 @@ COPY sonar-project.properties ./
 # Make mvnw executable
 RUN chmod +x mvnw
 
+# Copy frontend build files (needed for npm build)
+COPY package.json package-lock.json ./
+COPY angular.json tsconfig.json tsconfig.app.json ./
+COPY ngsw-config.json ./
+COPY webpack ./webpack
+
 # Copy source code
 COPY src ./src
 
-# Build the application (Maven will download dependencies automatically)
-# Skip npm/frontend build as we're building a backend-only Docker image
-RUN ./mvnw clean package -DskipTests -Dskip.npm -Dskip.installnodenpm -B
+# Build the application with frontend (webapp profile builds frontend, prod is for Spring Boot)
+RUN ./mvnw clean package -DskipTests -Pprod,webapp -B
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-jammy

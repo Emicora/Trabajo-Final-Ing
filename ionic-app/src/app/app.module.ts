@@ -24,7 +24,7 @@ import { ApiService } from './services/api.service';
     AppRoutingModule,
     HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: true, // Habilitado también en desarrollo para testing
+      enabled: environment.production, // Solo habilitado en producción
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],

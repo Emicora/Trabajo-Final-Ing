@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1765573853804,
+  "timestamp": 1765664352444,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -66,7 +66,7 @@
         "/9977.7abedc627cf16ad5.js",
         "/common.a97adbfb0bf4f815.js",
         "/index.html",
-        "/main.1534486365b0ccf0.js",
+        "/main.9908ddfc14f6f565.js",
         "/manifest.json",
         "/polyfills-core-js.778b6dcd803c3a7e.js",
         "/polyfills-dom.83193e6fea3816fc.js",
@@ -82,7 +82,16 @@
       "cacheQueryOptions": {
         "ignoreVary": true
       },
-      "urls": [],
+      "urls": [
+        "/assets/icon/icon-128x128.png",
+        "/assets/icon/icon-144x144.png",
+        "/assets/icon/icon-152x152.png",
+        "/assets/icon/icon-192x192.png",
+        "/assets/icon/icon-384x384.png",
+        "/assets/icon/icon-512x512.png",
+        "/assets/icon/icon-72x72.png",
+        "/assets/icon/icon-96x96.png"
+      ],
       "patterns": []
     }
   ],
@@ -90,11 +99,12 @@
     {
       "name": "api-calls",
       "patterns": [
-        "\\/api\\/.*"
+        "http:\\/\\/localhost:8080\\/api\\/.*",
+        "http:\\/\\/127\\.0\\.0\\.1:8080\\/api\\/.*"
       ],
-      "strategy": "freshness",
+      "strategy": "performance",
       "maxSize": 100,
-      "maxAge": 3600000,
+      "maxAge": 604800000,
       "timeoutMs": 10000,
       "cacheQueryOptions": {
         "ignoreVary": true
@@ -156,10 +166,18 @@
     "/9344.ebd0a47c029891a9.js": "9d62f70c2f24c8d55cb44f31b77d8935e0985186",
     "/964.9fe30c84924580d1.js": "92072035e5e8e563bf46d926021351be0e66f851",
     "/9977.7abedc627cf16ad5.js": "fb5dd993fd617f14a5c77589ee5f77d08bf6b28d",
+    "/assets/icon/icon-128x128.png": "df480d17864835a76db4abd997176e13cfa38d2c",
+    "/assets/icon/icon-144x144.png": "df480d17864835a76db4abd997176e13cfa38d2c",
+    "/assets/icon/icon-152x152.png": "ec1cd28328e885231c2d9a451cc46a8d4f10d6f4",
+    "/assets/icon/icon-192x192.png": "df480d17864835a76db4abd997176e13cfa38d2c",
+    "/assets/icon/icon-384x384.png": "55c081b847a19807b34b48e31e63a464a2726d4e",
+    "/assets/icon/icon-512x512.png": "6cf7f74775338ab98de40ef589c68337fe8e859c",
+    "/assets/icon/icon-72x72.png": "df480d17864835a76db4abd997176e13cfa38d2c",
+    "/assets/icon/icon-96x96.png": "df480d17864835a76db4abd997176e13cfa38d2c",
     "/common.a97adbfb0bf4f815.js": "a44dbeba7e834498177a7ef99565978bdea49651",
-    "/index.html": "45438c82fd7f1bcbe25f1a39a5c00b222055af5f",
-    "/main.1534486365b0ccf0.js": "c0e65f60bcdf00424fdea0acb5e23ebac4f144bb",
-    "/manifest.json": "7c11fc6ba80041122340241e119fc9d008dbc6c9",
+    "/index.html": "3309449c0d5a7d8c5d42f43d82a3632087e714db",
+    "/main.9908ddfc14f6f565.js": "1e8b3c1390cc8ccf109b3de5186b850a126debe4",
+    "/manifest.json": "6ceadcdefefa7eeda1769cf79cafff66469829ea",
     "/polyfills-core-js.778b6dcd803c3a7e.js": "cb9970a664d5b4bb9c86740ee9ba65bfef2fae26",
     "/polyfills-dom.83193e6fea3816fc.js": "e070037c3e1e3294996526dabe9a36d46069b00f",
     "/runtime.b80d9b19937ee73b.js": "741e4a87e09a333846373d92d25fe6ba6ae2a0db",

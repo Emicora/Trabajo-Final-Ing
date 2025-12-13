@@ -20,7 +20,7 @@ public class LoggingConfiguration {
 
     public LoggingConfiguration(
         @Value("${spring.application.name}") String appName,
-        @Value("${server.port}") String serverPort,
+        @Value("${server.port:8080}") String serverPort,
         JHipsterProperties jHipsterProperties,
         ObjectMapper mapper
     ) throws JsonProcessingException {
