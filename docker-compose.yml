@@ -8,8 +8,8 @@ services:
       - POSTGRES_DB=bugtracker
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      # Usando disco externo para liberar espacio en disco principal
-      - /media/emicoratolo/linux/docker-data/postgresql:/var/lib/postgresql/data
+      # Usando SSD externo montado de forma estable
+      - /mnt/ssd-docker/docker-data/postgresql:/var/lib/postgresql/data
       # Alternativa: usar volumen nombrado (comentado)
       # - postgresql_data:/var/lib/postgresql/data
     ports:
@@ -70,8 +70,8 @@ services:
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
-      # Usando disco externo para liberar espacio en disco principal
-      - /media/emicoratolo/linux/docker-data/elasticsearch:/usr/share/elasticsearch/data
+      # Usando SSD externo montado de forma estable
+      - /mnt/ssd-docker/docker-data/elasticsearch:/usr/share/elasticsearch/data
       # Alternativa: usar volumen nombrado (comentado)
       # - elasticsearch_data:/usr/share/elasticsearch/data
     ports:
@@ -115,9 +115,6 @@ services:
     networks:
       - bugtracker-network
 
-# Volúmenes: Ahora usando bind mounts al disco externo
-# Los datos se guardan en /media/emicoratolo/linux/docker-data/
-
   jenkins:
     image: jenkins/jenkins:lts
     container_name: bugtracker-jenkins
@@ -126,8 +123,6 @@ services:
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
-      # Socket de Docker (opcional, solo si necesitas usar comandos docker directamente)
-      # Con Jib no es necesario, pero lo dejamos por si acaso
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - JENKINS_OPTS=--httpPort=8080
@@ -144,12 +139,11 @@ networks:
 
 volumes:
   jenkins_home:
-    # Opcional: usar disco externo para Jenkins
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /media/emicoratolo/linux/docker-data/jenkins
 
-
-
+  # --- Alternativa (SI querés Jenkins en el SSD externo) ---
+  # jenkins_home:
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     o: bind
+  #     device: /mnt/ssd-docker/docker-data/jenkins
