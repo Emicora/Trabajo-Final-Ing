@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1765664352444,
+  "timestamp": 1765838554897,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -66,7 +66,7 @@
         "/9977.7abedc627cf16ad5.js",
         "/common.a97adbfb0bf4f815.js",
         "/index.html",
-        "/main.9908ddfc14f6f565.js",
+        "/main.45775248b5c26936.js",
         "/manifest.json",
         "/polyfills-core-js.778b6dcd803c3a7e.js",
         "/polyfills-dom.83193e6fea3816fc.js",
@@ -98,11 +98,8 @@
   "dataGroups": [
     {
       "name": "api-calls",
-      "patterns": [
-        "http:\\/\\/localhost:8080\\/api\\/.*",
-        "http:\\/\\/127\\.0\\.0\\.1:8080\\/api\\/.*"
-      ],
-      "strategy": "performance",
+      "patterns": ["http:\\/\\/localhost:8080\\/api\\/.*", "http:\\/\\/127\\.0\\.0\\.1:8080\\/api\\/.*"],
+      "strategy": "freshness",
       "maxSize": 100,
       "maxAge": 604800000,
       "timeoutMs": 10000,
@@ -175,8 +172,8 @@
     "/assets/icon/icon-72x72.png": "df480d17864835a76db4abd997176e13cfa38d2c",
     "/assets/icon/icon-96x96.png": "df480d17864835a76db4abd997176e13cfa38d2c",
     "/common.a97adbfb0bf4f815.js": "a44dbeba7e834498177a7ef99565978bdea49651",
-    "/index.html": "3309449c0d5a7d8c5d42f43d82a3632087e714db",
-    "/main.9908ddfc14f6f565.js": "1e8b3c1390cc8ccf109b3de5186b850a126debe4",
+    "/index.html": "0a85babe7a2ce9f1a0c2defd8f38c5f6f20d9492",
+    "/main.45775248b5c26936.js": "f8bd07a29154f58db95607bc8d3f8db12121b7c6",
     "/manifest.json": "6ceadcdefefa7eeda1769cf79cafff66469829ea",
     "/polyfills-core-js.778b6dcd803c3a7e.js": "cb9970a664d5b4bb9c86740ee9ba65bfef2fae26",
     "/polyfills-dom.83193e6fea3816fc.js": "e070037c3e1e3294996526dabe9a36d46069b00f",

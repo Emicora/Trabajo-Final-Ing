@@ -1,8 +1,8 @@
 /**
- * E2E Test: Login via API and create ticket with comments
- * This test demonstrates login using the API and then testing ticket and comment functionality
+ * Test E2E: Login por API y crear ticket con comentarios
+ * Este test demuestra el login usando la API y luego prueba la funcionalidad de tickets y comentarios
  */
-describe('Ticket and Comment API E2E Test', () => {
+describe('Test E2E API de Tickets y Comentarios', () => {
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
   const apiBaseUrl = Cypress.env('apiUrl') ?? 'http://localhost:8080/api';
@@ -12,7 +12,7 @@ describe('Ticket and Comment API E2E Test', () => {
   let createdCommentId: number;
 
   before(() => {
-    // Login using API
+    // Login usando API
     cy.request({
       method: 'POST',
       url: `${apiBaseUrl}/authenticate`,
@@ -20,15 +20,15 @@ describe('Ticket and Comment API E2E Test', () => {
         username: username,
         password: password,
       },
-    }).then((response) => {
+    }).then(response => {
       expect(response.status).to.eq(200);
       expect(response.body).to.have.property('id_token');
       authToken = response.body.id_token;
     });
   });
 
-  it('should create a ticket and add comments via API after login', () => {
-    // Step 1: Create a ticket
+  it('debe crear un ticket y agregar comentarios por API después del login', () => {
+    // Paso 1: Crear un ticket
     cy.request({
       method: 'POST',
       url: `${apiBaseUrl}/tickets`,
@@ -36,19 +36,19 @@ describe('Ticket and Comment API E2E Test', () => {
         Authorization: `Bearer ${authToken}`,
       },
       body: {
-        title: 'Ticket with Comments',
-        description: 'This ticket will have comments added via API',
+        title: 'Ticket con Comentarios',
+        description: 'Este ticket tendrá comentarios agregados por API',
         status: 'OPEN',
         type: 'FEATURE',
         priority: 'NORMAL',
       },
-    }).then((response) => {
+    }).then(response => {
       expect(response.status).to.eq(201);
       expect(response.body).to.have.property('id');
       createdTicketId = response.body.id;
     });
 
-    // Step 2: Add a comment to the ticket
+    // Paso 2: Agregar un comentario al ticket
     cy.request({
       method: 'POST',
       url: `${apiBaseUrl}/comments`,
@@ -56,66 +56,66 @@ describe('Ticket and Comment API E2E Test', () => {
         Authorization: `Bearer ${authToken}`,
       },
       body: {
-        text: 'First comment added via API',
+        text: 'Primer comentario agregado por API',
         date: new Date().toISOString(),
       },
-    }).then((response) => {
+    }).then(response => {
       expect(response.status).to.eq(201);
       expect(response.body).to.have.property('id');
-      expect(response.body.text).to.eq('First comment added via API');
+      expect(response.body.text).to.eq('Primer comentario agregado por API');
       createdCommentId = response.body.id;
     });
   });
 
-  it('should retrieve ticket with comments via API', () => {
-    // Retrieve the ticket
+  it('debe obtener el ticket con comentarios por API', () => {
+    // Obtener el ticket
     cy.request({
       method: 'GET',
       url: `${apiBaseUrl}/tickets/${createdTicketId}`,
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
-    }).then((response) => {
+    }).then(response => {
       expect(response.status).to.eq(200);
       expect(response.body.id).to.eq(createdTicketId);
-      expect(response.body.title).to.eq('Ticket with Comments');
+      expect(response.body.title).to.eq('Ticket con Comentarios');
     });
 
-    // Retrieve the comment
+    // Obtener el comentario
     cy.request({
       method: 'GET',
       url: `${apiBaseUrl}/comments/${createdCommentId}`,
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
-    }).then((response) => {
+    }).then(response => {
       expect(response.status).to.eq(200);
       expect(response.body.id).to.eq(createdCommentId);
-      expect(response.body.text).to.eq('First comment added via API');
+      expect(response.body.text).to.eq('Primer comentario agregado por API');
     });
   });
 
-  it('should update comment via API', () => {
-    // Update the comment
+  it('debe actualizar el comentario por API', () => {
+    // Actualizar el comentario
     cy.request({
       method: 'PUT',
-      url: `${apiBaseUrl}/comments`,
+      url: `${apiBaseUrl}/comments/${createdCommentId}`,
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
       body: {
         id: createdCommentId,
-        text: 'Updated comment via API',
+        text: 'Comentario actualizado por API',
         date: new Date().toISOString(),
       },
-    }).then((response) => {
+    }).then(response => {
       expect(response.status).to.eq(200);
-      expect(response.body.text).to.eq('Updated comment via API');
+      expect(response.body.text).to.eq('Comentario actualizado por API');
     });
   });
 
   after(() => {
-    // Cleanup: Delete comment first, then ticket
+    // Limpieza: Eliminar primero el comentario, luego el ticket
     if (createdCommentId) {
       cy.request({
         method: 'DELETE',
@@ -138,6 +138,3 @@ describe('Ticket and Comment API E2E Test', () => {
     }
   });
 });
-
-
-

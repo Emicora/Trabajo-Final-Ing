@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit test for Project entity.
- * Tests the business logic without Spring context.
+ * Test unitario para la entidad Project.
+ * Prueba la lógica de negocio sin contexto de Spring.
  */
 class ProjectUnitTest {
 
@@ -20,35 +20,35 @@ class ProjectUnitTest {
 
     @Test
     void testProjectCreation() {
-        // Given
-        String projectName = "Test Project";
+        // Dado
+        String projectName = "Proyecto de Prueba";
 
-        // When
+        // Cuando
         project.setName(projectName);
 
-        // Then
+        // Entonces
         assertNotNull(project);
         assertEquals(projectName, project.getName());
     }
 
     @Test
     void testProjectWithId() {
-        // Given
+        // Dado
         Long projectId = 1L;
-        String projectName = "Project with ID";
+        String projectName = "Proyecto con ID";
 
-        // When
+        // Cuando
         project.setId(projectId);
         project.setName(projectName);
 
-        // Then
+        // Entonces
         assertEquals(projectId, project.getId());
         assertEquals(projectName, project.getName());
     }
 
     @Test
     void testProjectEquals() {
-        // Given
+        // Dado
         Project project1 = new Project();
         project1.setId(1L);
         project1.setName("Project 1");
@@ -61,14 +61,14 @@ class ProjectUnitTest {
         project3.setId(2L);
         project3.setName("Project 1");
 
-        // Then
-        assertEquals(project1, project2, "Projects with same ID should be equal");
-        assertNotEquals(project1, project3, "Projects with different IDs should not be equal");
+        // Entonces
+        assertEquals(project1, project2, "Los proyectos con el mismo ID deben ser iguales");
+        assertNotEquals(project1, project3, "Los proyectos con diferentes IDs no deben ser iguales");
     }
 
     @Test
     void testProjectHashCode() {
-        // Given
+        // Dado
         Project project1 = new Project();
         project1.setId(1L);
 
@@ -78,59 +78,58 @@ class ProjectUnitTest {
         Project project3 = new Project();
         project3.setId(2L);
 
-        // Then
-        // In JPA entities, hashCode is based on class, not ID (for entities not yet persisted)
-        // All Project instances have the same hashCode (the class hashCode)
-        assertEquals(project1.hashCode(), project2.hashCode(), "Projects should have same hashCode (based on class)");
-        assertEquals(project1.hashCode(), project3.hashCode(), "All Project instances have same hashCode (JPA pattern)");
-        assertNotNull(project1.hashCode(), "hashCode should not be null");
+        // Entonces
+        // En entidades JPA, hashCode se basa en la clase, no en el ID (para entidades aún no persistidas)
+        // Todas las instancias de Project tienen el mismo hashCode (el hashCode de la clase)
+        assertEquals(project1.hashCode(), project2.hashCode(), "Los proyectos deben tener el mismo hashCode (basado en la clase)");
+        assertEquals(project1.hashCode(), project3.hashCode(), "Todas las instancias de Project tienen el mismo hashCode (patrón JPA)");
+        assertNotNull(project1.hashCode(), "hashCode no debe ser null");
     }
 
     @Test
     void testProjectToString() {
-        // Given
+        // Dado
         project.setId(1L);
-        project.setName("Test Project");
+        project.setName("Proyecto de Prueba");
 
-        // When
+        // Cuando
         String toString = project.toString();
 
-        // Then
+        // Entonces
         assertNotNull(toString);
-        assertTrue(toString.contains("Test Project"));
+        assertTrue(toString.contains("Proyecto de Prueba"));
         assertTrue(toString.contains("id=1"));
     }
 
     @Test
     void testProjectFluentSetters() {
-        // When
-        Project result = project.id(1L).name("Fluent Project");
+        // Cuando
+        Project result = project.id(1L).name("Proyecto Fluent");
 
-        // Then
+        // Entonces
         assertEquals(project, result);
         assertEquals(1L, project.getId());
-        assertEquals("Fluent Project", project.getName());
+        assertEquals("Proyecto Fluent", project.getName());
     }
 
     @Test
     void testProjectNullName() {
-        // When
+        // Cuando
         project.setName(null);
 
-        // Then
+        // Entonces
         assertNull(project.getName());
     }
 
     @Test
     void testProjectEmptyName() {
-        // Given
+        // Dado
         String emptyName = "";
 
-        // When
+        // Cuando
         project.setName(emptyName);
 
-        // Then
+        // Entonces
         assertEquals(emptyName, project.getName());
     }
 }
-

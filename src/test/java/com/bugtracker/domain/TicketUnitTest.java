@@ -11,8 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit test for Ticket entity.
- * Tests the business logic without Spring context.
+ * Test unitario para la entidad Ticket.
+ * Prueba la lógica de negocio sin contexto de Spring.
  */
 class TicketUnitTest {
 
@@ -25,21 +25,21 @@ class TicketUnitTest {
 
     @Test
     void testTicketCreation() {
-        // Given
-        String title = "Test Ticket";
-        String description = "Test Description";
+        // Dado
+        String title = "Ticket de Prueba";
+        String description = "Descripción de Prueba";
         Status status = Status.OPEN;
         Type type = Type.BUG;
         Priority priority = Priority.HIGH;
 
-        // When
+        // Cuando
         ticket.setTitle(title);
         ticket.setDescription(description);
         ticket.setStatus(status);
         ticket.setType(type);
         ticket.setPriority(priority);
 
-        // Then
+        // Entonces
         assertNotNull(ticket);
         assertEquals(title, ticket.getTitle());
         assertEquals(description, ticket.getDescription());
@@ -50,22 +50,22 @@ class TicketUnitTest {
 
     @Test
     void testTicketWithDates() {
-        // Given
+        // Dado
         LocalDate dueDate = LocalDate.now().plusDays(7);
         ZonedDateTime date = ZonedDateTime.now();
 
-        // When
+        // Cuando
         ticket.setDueDate(dueDate);
         ticket.setDate(date);
 
-        // Then
+        // Entonces
         assertEquals(dueDate, ticket.getDueDate());
         assertEquals(date, ticket.getDate());
     }
 
     @Test
     void testTicketEquals() {
-        // Given
+        // Dado
         Ticket ticket1 = new Ticket();
         ticket1.setId(1L);
         ticket1.setTitle("Ticket 1");
@@ -78,36 +78,36 @@ class TicketUnitTest {
         ticket3.setId(2L);
         ticket3.setTitle("Ticket 1");
 
-        // Then
-        assertEquals(ticket1, ticket2, "Tickets with same ID should be equal");
-        assertNotEquals(ticket1, ticket3, "Tickets with different IDs should not be equal");
+        // Entonces
+        assertEquals(ticket1, ticket2, "Los tickets con el mismo ID deben ser iguales");
+        assertNotEquals(ticket1, ticket3, "Los tickets con diferentes IDs no deben ser iguales");
     }
 
     @Test
     void testTicketAddRemoveAttachment() {
-        // Given
+        // Dado
         Attachment attachment = new Attachment();
         attachment.setId(1L);
         attachment.setName("test-attachment");
 
-        // When
+        // Cuando
         ticket.addAttachment(attachment);
 
-        // Then
+        // Entonces
         assertTrue(ticket.getAttachments().contains(attachment));
         assertEquals(ticket, attachment.getTicket());
 
-        // When removing
+        // Cuando se elimina
         ticket.removeAttachment(attachment);
 
-        // Then
+        // Entonces
         assertFalse(ticket.getAttachments().contains(attachment));
         assertNull(attachment.getTicket());
     }
 
     @Test
     void testTicketAddRemoveLabel() {
-        // Given
+        // Dado
         Label label1 = new Label();
         label1.setId(1L);
         label1.setLabel("bug");
@@ -116,19 +116,19 @@ class TicketUnitTest {
         label2.setId(2L);
         label2.setLabel("urgent");
 
-        // When
+        // Cuando
         ticket.addLabel(label1);
         ticket.addLabel(label2);
 
-        // Then
+        // Entonces
         assertTrue(ticket.getLabels().contains(label1));
         assertTrue(ticket.getLabels().contains(label2));
         assertEquals(2, ticket.getLabels().size());
 
-        // When removing
+        // Cuando se elimina
         ticket.removeLabel(label1);
 
-        // Then
+        // Entonces
         assertFalse(ticket.getLabels().contains(label1));
         assertTrue(ticket.getLabels().contains(label2));
         assertEquals(1, ticket.getLabels().size());
@@ -136,19 +136,19 @@ class TicketUnitTest {
 
     @Test
     void testTicketToString() {
-        // Given
+        // Dado
         ticket.setId(1L);
-        ticket.setTitle("Test Ticket");
+        ticket.setTitle("Ticket de Prueba");
         ticket.setStatus(Status.OPEN);
         ticket.setType(Type.BUG);
         ticket.setPriority(Priority.HIGH);
 
-        // When
+        // Cuando
         String toString = ticket.toString();
 
-        // Then
+        // Entonces
         assertNotNull(toString);
-        assertTrue(toString.contains("Test Ticket"));
+        assertTrue(toString.contains("Ticket de Prueba"));
         assertTrue(toString.contains("OPEN"));
         assertTrue(toString.contains("BUG"));
         assertTrue(toString.contains("HIGH"));
@@ -156,32 +156,29 @@ class TicketUnitTest {
 
     @Test
     void testTicketFluentSetters() {
-        // Given
+        // Dado
         Project project = new Project();
         project.setId(1L);
-        project.setName("Test Project");
+        project.setName("Proyecto de Prueba");
 
-        // When
+        // Cuando
         Ticket result = ticket
             .id(1L)
-            .title("Test Title")
-            .description("Test Description")
+            .title("Título de Prueba")
+            .description("Descripción de Prueba")
             .status(Status.OPEN)
             .type(Type.FEATURE)
             .priority(Priority.NORMAL)
             .project(project);
 
-        // Then
+        // Entonces
         assertEquals(ticket, result);
         assertEquals(1L, ticket.getId());
-        assertEquals("Test Title", ticket.getTitle());
-        assertEquals("Test Description", ticket.getDescription());
+        assertEquals("Título de Prueba", ticket.getTitle());
+        assertEquals("Descripción de Prueba", ticket.getDescription());
         assertEquals(Status.OPEN, ticket.getStatus());
         assertEquals(Type.FEATURE, ticket.getType());
         assertEquals(Priority.NORMAL, ticket.getPriority());
         assertEquals(project, ticket.getProject());
     }
 }
-
-
-

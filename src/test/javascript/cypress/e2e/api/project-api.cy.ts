@@ -1,8 +1,8 @@
 /**
- * E2E Test: Login via API and manage projects
- * This test demonstrates login using the API and then testing project CRUD operations
+ * Test E2E: Login por API y gestionar proyectos
+ * Este test demuestra el login usando la API y luego prueba las operaciones CRUD de proyectos
  */
-describe('Project API E2E Test', () => {
+describe('Test E2E API de Proyectos', () => {
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
   const apiBaseUrl = Cypress.env('apiUrl') ?? 'http://localhost:8080/api';
@@ -11,7 +11,7 @@ describe('Project API E2E Test', () => {
   let createdProjectId: number;
 
   before(() => {
-    // Login using API
+    // Login usando API
     cy.request({
       method: 'POST',
       url: `${apiBaseUrl}/authenticate`,
@@ -19,15 +19,15 @@ describe('Project API E2E Test', () => {
         username: username,
         password: password,
       },
-    }).then((response) => {
+    }).then(response => {
       expect(response.status).to.eq(200);
       expect(response.body).to.have.property('id_token');
       authToken = response.body.id_token;
     });
   });
 
-  it('should create a project via API after login', () => {
-    // Create a project using the authenticated API
+  it('debe crear un proyecto por API después del login', () => {
+    // Crear un proyecto usando la API autenticada
     cy.request({
       method: 'POST',
       url: `${apiBaseUrl}/projects`,
@@ -35,54 +35,54 @@ describe('Project API E2E Test', () => {
         Authorization: `Bearer ${authToken}`,
       },
       body: {
-        name: 'Test Project via API',
+        name: 'Proyecto de Prueba por API',
       },
-    }).then((response) => {
+    }).then(response => {
       expect(response.status).to.eq(201);
       expect(response.body).to.have.property('id');
-      expect(response.body.name).to.eq('Test Project via API');
+      expect(response.body.name).to.eq('Proyecto de Prueba por API');
       createdProjectId = response.body.id;
     });
   });
 
-  it('should list all projects via API', () => {
-    // List all projects
+  it('debe listar todos los proyectos por API', () => {
+    // Listar todos los proyectos
     cy.request({
       method: 'GET',
       url: `${apiBaseUrl}/projects`,
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
-    }).then((response) => {
+    }).then(response => {
       expect(response.status).to.eq(200);
       expect(response.body).to.be.an('array');
-      // Verify our created project is in the list
+      // Verificar que nuestro proyecto creado está en la lista
       const project = response.body.find((p: any) => p.id === createdProjectId);
       expect(project).to.exist;
-      expect(project.name).to.eq('Test Project via API');
+      expect(project.name).to.eq('Proyecto de Prueba por API');
     });
   });
 
-  it('should update the project via API', () => {
-    // Update the project name
+  it('debe actualizar el proyecto por API', () => {
+    // Actualizar el nombre del proyecto
     cy.request({
       method: 'PUT',
-      url: `${apiBaseUrl}/projects`,
+      url: `${apiBaseUrl}/projects/${createdProjectId}`,
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
       body: {
         id: createdProjectId,
-        name: 'Updated Project via API',
+        name: 'Proyecto Actualizado por API',
       },
-    }).then((response) => {
+    }).then(response => {
       expect(response.status).to.eq(200);
-      expect(response.body.name).to.eq('Updated Project via API');
+      expect(response.body.name).to.eq('Proyecto Actualizado por API');
     });
   });
 
   after(() => {
-    // Cleanup: Delete the created project
+    // Limpieza: Eliminar el proyecto creado
     if (createdProjectId) {
       cy.request({
         method: 'DELETE',
@@ -90,12 +90,9 @@ describe('Project API E2E Test', () => {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
-      }).then((response) => {
+      }).then(response => {
         expect(response.status).to.eq(204);
       });
     }
   });
 });
-
-
-

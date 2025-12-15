@@ -33,6 +33,7 @@
     "cleanup": "rimraf target/",
     "cypress": "cypress open --e2e",
     "cypress:audits": "cypress open --e2e --config-file cypress-audits.config.js",
+    "cypress:mis-tests": "cypress open --e2e --config-file cypress-mis-tests.config.ts",
     "docker:db:down": "docker compose -f src/main/docker/postgresql.yml down -v",
     "docker:db:up": "docker compose -f src/main/docker/postgresql.yml up --wait",
     "e2e": "npm run e2e:cypress:headed --",
